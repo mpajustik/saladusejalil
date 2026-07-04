@@ -22,7 +22,7 @@
     { "id": "aed",          "name": "Muuseumiaed",     "description": "Tagaaed, kus on skulptuurid." }
   ],
   "items": [
-    { "id": "voti",         "name": "Salajane võti",   "description": "Avab ruumi, kuhu kõigil ligipääs puudub." },
+    { "id": "võti",         "name": "Salajane võti",   "description": "Avab ruumi, kuhu kõigil ligipääs puudub." },
     { "id": "kaamera",      "name": "Kustutatud salvestis","description": "Turvakaamerate salvestis on tühjaks kustutatud." },
     { "id": "kindad",       "name": "Kunstkiust kindad","description": "Leiti põrandalt, sõrmejälgi ei jätnud." },
     { "id": "kiri",         "name": "Anonüümne kiri",  "description": "Pabertükk salapärase tekstiga." },
