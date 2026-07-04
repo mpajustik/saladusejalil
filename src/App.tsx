@@ -811,11 +811,57 @@ function App() {
     return (
       <main>
         <h1>Saladuse Jälil</h1>
-        <CardShownScreen
-          askerName={activePlayer.name}
-          shownCard={game.shownCard}
-          onConfirm={confirmShownCard}
-        />
+        <div className="turn-bar">
+          <div className="turn-bar-top">
+            <span className="turn-label">Kord:</span>
+            <span className="turn-player">{activePlayer.name}</span>
+            <div className="tab-buttons">
+              <button className={`tab-btn ${tab === 'game' ? 'tab-active' : ''}`} onClick={() => setTab('game')}>Mäng</button>
+              <button className={`tab-btn ${tab === 'notebook' ? 'tab-active' : ''}`} onClick={() => setTab('notebook')}>Märkmik</button>
+            </div>
+          </div>
+        </div>
+        {tab === 'game' && (
+          <CardShownScreen
+            askerName={activePlayer.name}
+            shownCard={game.shownCard}
+            onConfirm={() => { setTab('game'); confirmShownCard() }}
+          />
+        )}
+        {tab === 'notebook' && (
+          <>
+            <div className="notebook-selection-bar">
+              <span className="nsb-label">Sulle näidati:</span>
+              <div className="nsb-selects">
+                <div className="nsb-row">
+                  <span className="nsb-cat" style={{ color: '#c9a227' }}>{game.shownCard.name}</span>
+                </div>
+              </div>
+              <button className="btn-secondary nsb-switch" onClick={() => setTab('game')}>← Tagasi</button>
+            </div>
+            <GridNotebook
+              gameCase={selectedCase}
+              players={game.players.map(p => ({ id: p.id, name: p.name }))}
+              myPlayerId={activePlayer.id}
+              notes={game.notes[activePlayer.id] ?? {}}
+              onUpdate={(cardId, targetId, value) => updateNote(activePlayer.id, cardId, targetId, value)}
+            />
+            {game.history.length > 0 && (
+              <section className="history-section" style={{ marginTop: '1rem' }}>
+                <h2>Tegevuste ajalugu ({game.history.length})</h2>
+                <ol>
+                  {game.history.map((h, i) => (
+                    <li key={i} className="history-item">
+                      <span className="history-player">{h.playerName}</span> arvas:{' '}
+                      <span className="history-cards">{h.suspect} · {h.location} · {h.item}</span>
+                      <span className="history-result"> — {h.result}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+          </>
+        )}
       </main>
     )
   }
