@@ -782,15 +782,57 @@ function App() {
   }
 
   if (game.phase === 'revealing' && game.refuterIndex !== null) {
+    const refuter = game.players[game.refuterIndex]
     return (
       <main>
         <h1>Saladuse Jälil</h1>
-        <RevealScreen
-          refuterName={game.players[game.refuterIndex].name}
-          askerName={activePlayer.name}
-          options={game.refuterOptions}
-          onReveal={revealCard}
-        />
+        <div className="turn-bar">
+          <div className="turn-bar-top">
+            <span className="turn-label">Valib:</span>
+            <span className="turn-player">{refuter.name}</span>
+            <div className="tab-buttons">
+              <button className={`tab-btn ${tab === 'game' ? 'tab-active' : ''}`} onClick={() => setTab('game')}>Kaardid</button>
+              <button className={`tab-btn ${tab === 'notebook' ? 'tab-active' : ''}`} onClick={() => setTab('notebook')}>Märkmik</button>
+            </div>
+          </div>
+        </div>
+        {tab === 'game' && (
+          <RevealScreen
+            refuterName={refuter.name}
+            askerName={activePlayer.name}
+            options={game.refuterOptions}
+            onReveal={card => { setTab('game'); revealCard(card) }}
+          />
+        )}
+        {tab === 'notebook' && (
+          <>
+            <div className="notebook-selection-bar">
+              <span className="nsb-label">Vali kaart mida näidata — vaata märkmikust</span>
+              <button className="btn-secondary nsb-switch" onClick={() => setTab('game')}>← Tagasi valikule</button>
+            </div>
+            <GridNotebook
+              gameCase={selectedCase}
+              players={game.players.map(p => ({ id: p.id, name: p.name }))}
+              myPlayerId={refuter.id}
+              notes={game.notes[refuter.id] ?? {}}
+              onUpdate={(cardId, targetId, value) => updateNote(refuter.id, cardId, targetId, value)}
+            />
+            {game.history.length > 0 && (
+              <section className="history-section" style={{ marginTop: '1rem' }}>
+                <h2>Tegevuste ajalugu ({game.history.length})</h2>
+                <ol>
+                  {game.history.map((h, i) => (
+                    <li key={i} className="history-item">
+                      <span className="history-player">{h.playerName}</span> arvas:{' '}
+                      <span className="history-cards">{h.suspect} · {h.location} · {h.item}</span>
+                      <span className="history-result"> — {h.result}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+          </>
+        )}
       </main>
     )
   }
