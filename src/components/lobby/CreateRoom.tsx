@@ -76,7 +76,7 @@ export function CreateRoom({ onBack, onCreated }: Props) {
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            placeholder="nt. Merlis"
+            placeholder="Mängija nimi"
             maxLength={20}
             autoFocus
           />

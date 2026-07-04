@@ -51,7 +51,7 @@ export function JoinRoom({ onBack, onJoined }: Props) {
             type="text"
             value={name}
             onChange={e => setName(e.target.value)}
-            placeholder="nt. Jaan"
+            placeholder="Mängija nimi"
             maxLength={20}
           />
         </div>
