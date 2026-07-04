@@ -2,32 +2,34 @@
   "id": "kadunud-leiutis",
   "title": "Kadunud Leiutise Juhtum",
   "description": "Kooli teadusmessilt on kadunud tähtis leiutis. Mängijad peavad välja selgitama, kes oli juhtumiga seotud, kus see toimus ja milline ese või tõend aitab tõe paljastada.",
+  "intro": "Teadusmess pidi olema selle aasta tippsündmus — kuni keegi otsustas, et parim leiutis ei peaks võistlust võitma. Vaheajal kadus prototüüp jäljetult. Kaamerad salvestasid vaid segadust, tunnistajad on vastuolulised ja keegi koridoris ei mäleta midagi. Detektiivid, teie kord.",
+  "resolution": "Juhtum on lahendatud. {suspect} tunnistas lõpuks üles — {location}s leiti {item}, mis kinnitas kõik kahtlused. Koolidirektor lubas, et järgmisel aastal on kaamerad igas nurgas.",
   "difficulty": "easy",
   "minPlayers": 3,
   "maxPlayers": 6,
   "suspects": [
-    { "id": "mari",   "name": "Mari",   "description": "Noor teadlane, kes esitles messil oma keemiakatset." },
-    { "id": "jaan",   "name": "Jaan",   "description": "Robootikaringi liige, kes tundis leiutise vastu suurt huvi." },
-    { "id": "kati",   "name": "Kati",   "description": "Korraldaja, kes vastutas messi ajakava ja ruumide eest." },
-    { "id": "rasmus", "name": "Rasmus", "description": "Fotograaf, kes liikus kogu päeva erinevates ruumides." },
-    { "id": "liis",   "name": "Liis",   "description": "Laboriabiline, kes aitas vahendeid valmis panna." },
-    { "id": "oskar",  "name": "Oskar",  "description": "Külaline teisest koolist, kes uuris teiste projekte." }
+    { "id": "mari",   "name": "Mari",   "description": "Noor teadlane, kes esitles messil oma keemiakatset.",          "motive": "Mari tuli teisele kohale — ja teab, et esimese koha projekt oli parem kui tema oma. Kadedustunne ei anna rahu." },
+    { "id": "jaan",   "name": "Jaan",   "description": "Robootikaringi liige, kes tundis leiutise vastu suurt huvi.",  "motive": "Jaan on töötanud sarnase projektiga kaks aastat. Kui ta leiutise saaks, saaks ta seda oma nimega esitleda." },
+    { "id": "kati",   "name": "Kati",   "description": "Korraldaja, kes vastutas messi ajakava ja ruumide eest.",      "motive": "Kati teab kõiki ruumide koode ja ajakavasid. Ta ei seleta, miks ta vaheajal ruumide vahel liikus." },
+    { "id": "rasmus", "name": "Rasmus", "description": "Fotograaf, kes liikus kogu päeva erinevates ruumides.",        "motive": "Rasmus fotostas kõike — ka neid hetki, mida keegi ei pidanud nägema. Kellegi huvides oleks, kui need pildid kaoksid." },
+    { "id": "liis",   "name": "Liis",   "description": "Laboriabiline, kes aitas vahendeid valmis panna.",             "motive": "Liis aitas leiutist paigaldada ja teab täpselt, kuidas seda lahti võtta. Ta on kellelegi midagi võlgu." },
+    { "id": "oskar",  "name": "Oskar",  "description": "Külaline teisest koolist, kes uuris teiste projekte.",         "motive": "Oskari kool osaleb samal võistlusel järgmisel kuul. Prototüüp annaks neile ülekaaluka eelise." }
   ],
   "locations": [
-    { "id": "keemialabor",  "name": "Keemialabor",  "description": "Ruum, kus tehti viimased katsed." },
-    { "id": "fuusikaklass", "name": "Füüsikaklass", "description": "Klass, kus toimus tehniline testimine." },
-    { "id": "raamatukogu",  "name": "Raamatukogu",  "description": "Koht, kus hoiti projektide kirjeldusi." },
-    { "id": "aula",         "name": "Aula",          "description": "Peamine messiala." },
-    { "id": "arvutiklass",  "name": "Arvutiklass",   "description": "Ruum esitluste ja failide ettevalmistamiseks." },
-    { "id": "koridor",      "name": "Koridor",       "description": "Kõik liikusid siit läbi." }
+    { "id": "keemialabor",  "name": "Keemialabor",  "description": "Klaaspudelid, aurud ja tilkuv kraan. Uks oli vaheajal lukustamata." },
+    { "id": "fuusikaklass", "name": "Füüsikaklass", "description": "Pooleli katsestend, toolid lükatud laiali. Siin toimus midagi kiirustades." },
+    { "id": "raamatukogu",  "name": "Raamatukogu",  "description": "Vaikne ja pime — ideaalne koht, kus keegi ei näe sind." },
+    { "id": "aula",         "name": "Aula",          "description": "Rahvast täis messisaal, kus kadumise hetkel valitses kaos." },
+    { "id": "arvutiklass",  "name": "Arvutiklass",   "description": "Ekraanid põlesid tühja töölauaga. Kellegi fail oli kustutatud." },
+    { "id": "koridor",      "name": "Koridor",       "description": "Kõik liikusid siit läbi — aga keegi ei mäleta kedagi nägema." }
   ],
   "items": [
-    { "id": "malupulk",     "name": "Mälupulk",     "description": "Võis sisaldada leiutise jooniseid." },
-    { "id": "voti",         "name": "Võti",          "description": "Avas piiratud ligipääsuga ruumi." },
-    { "id": "katseklaas",   "name": "Katseklaas",   "description": "Sellel oli ainejääk." },
-    { "id": "markmik",      "name": "Märkmik",       "description": "Sisaldas katsetulemusi." },
-    { "id": "kaamerapilt",  "name": "Kaamerapilt",   "description": "Foto, mille taustal võis olla oluline detail." },
-    { "id": "kruvikeeraja", "name": "Kruvikeeraja",  "description": "Tööriist korpuse avamiseks." }
+    { "id": "malupulk",     "name": "Mälupulk",     "description": "Võis sisaldada leiutise jooniseid ja lähtekoodi." },
+    { "id": "voti",         "name": "Võti",          "description": "Avas piiratud ligipääsuga ruumi — kellel see oli?" },
+    { "id": "katseklaas",   "name": "Katseklaas",   "description": "Sellel oli tundmatu ainejääk, mida keegi ei seleta." },
+    { "id": "markmik",      "name": "Märkmik",       "description": "Sisaldas käsitsi kirjutatud katsetulemusi ja märkmeid." },
+    { "id": "kaamerapilt",  "name": "Kaamerapilt",   "description": "Foto, mille taustal oli detail, mida fotograaf ei osanud oodata." },
+    { "id": "kruvikeeraja", "name": "Kruvikeeraja",  "description": "Tööriist korpuse avamiseks — jäeti maha kiirustades." }
   ],
   "rules": {
     "solutionMode": "random",

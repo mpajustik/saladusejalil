@@ -2,32 +2,34 @@
   "id": "muuseumi-vargus",
   "title": "Muuseumi Varguse Juhtum",
   "description": "Linna muuseumist on öö jooksul kadunud väärtuslik eksponaat. Mängijad peavad välja selgitama, kes oli vargusega seotud, kus see toimus ja milline ese paljastab tõe.",
+  "intro": "Esmaspäeva hommikul avati muuseumi uksed — ja kohe selgus, et midagi on valesti. Üks väärtuslikumatest eksponaatidest on kadunud. Öörahi sõnul ei pääsenud keegi sisse, kuid turvakaamerad salvestasid vaid staatilise müra. Keegi valetab. Teie ülesanne on leida, kes, kus ja millega.",
+  "resolution": "Uurimine on lõppenud. {suspect} viidi küsitlusele — tõendid osutasid {location}le, kus leiti {item}. Muuseumi direktor ohkas kergendatult: saladus on paljastatud.",
   "difficulty": "medium",
   "minPlayers": 3,
   "maxPlayers": 6,
   "suspects": [
-    { "id": "valvur",     "name": "Valvur Toomas",   "description": "Öövalvur, kes peaks olema kõike jälginud." },
-    { "id": "kuraator",   "name": "Kuraator Eeva",   "description": "Vastutab eksponaatide eest ja teab nende asukohti." },
-    { "id": "restauraator","name": "Restauraator Rein","description": "Oli hiljuti tööl hiliste õhtutundideni." },
-    { "id": "külastaja",  "name": "Külaline Karl",   "description": "Viimane enne sulgemist lahkunud külastaja." },
-    { "id": "koristaja",  "name": "Koristaja Malle",  "description": "Puhastab muuseumi igal õhtul." },
-    { "id": "teadlane",   "name": "Teadlane Priit",  "description": "Külalisteadlane, kellel oli eriload." }
+    { "id": "valvur",       "name": "Valvur Toomas",     "description": "Öövalvur, kes peaks olema kõike jälginud.",               "motive": "Toomas on töötanud muuseumis kümme aastat, kuid talle keelati palgatõus. Ta teab iga nurga ja iga kaamera pimenurga." },
+    { "id": "kuraator",     "name": "Kuraator Eeva",     "description": "Vastutab eksponaatide eest ja teab nende asukohti.",       "motive": "Eeva soovis eksponaadi müüa erakollektsionäärile — muuseum lükkas tema ettepaneku tagasi. Tal oli juurdepääs kõigile võtmetele." },
+    { "id": "restauraator", "name": "Restauraator Rein", "description": "Oli hiljuti tööl hiliste õhtutundideni.",                  "motive": "Rein vajas raha kiireloomuliselt. Tal oli õigus olla hoones pärast sulgemist — keegi ei oleks küsinud." },
+    { "id": "külastaja",    "name": "Külaline Karl",     "description": "Viimane enne sulgemist lahkunud külastaja.",               "motive": "Karl on tuntud kunstikoguja, kelle kogu on just see ese kaua puudunud. Ta käis muuseumis kolm päeva järjest." },
+    { "id": "koristaja",    "name": "Koristaja Malle",   "description": "Puhastab muuseumi igal õhtul.",                            "motive": "Malle avastas kogemata, et eksponaat on võlts. Ta ähvardas avalikustada — keegi soovib teda vaikima panna." },
+    { "id": "teadlane",     "name": "Teadlane Priit",    "description": "Külalisteadlane, kellel oli eriload.",                     "motive": "Priit uurib eksponaadi päritolu ja kahtlustab, et see kuulub teisele riigile. Tema huvid lähevad vastuollu muuseumi omadega." }
   ],
   "locations": [
-    { "id": "peasaal",      "name": "Peasaal",        "description": "Peamine näitusesaal koos peamiste eksponaatidega." },
-    { "id": "hoidla",       "name": "Hoidla",         "description": "Suletud ruum, kus hoitakse varukollektsiooni." },
-    { "id": "arhiiv",       "name": "Arhiiv",         "description": "Vanad dokumendid ja kataloogid." },
-    { "id": "turvakabinet", "name": "Turvakabinet",   "description": "Valvekaameraid jälgitakse siit." },
-    { "id": "taastusruum",  "name": "Taastusruum",    "description": "Eksponaatide puhastamise ja parandamise ruum." },
-    { "id": "aed",          "name": "Muuseumiaed",    "description": "Tagaaed, kus on skulptuurid." }
+    { "id": "peasaal",      "name": "Peasaal",       "description": "Kõrged laed, nõrgad tuled ja eksponaadid klaasvitriinides. Iga samm kajab." },
+    { "id": "hoidla",       "name": "Hoidla",        "description": "Suletud metalluksed, tolmune põrand. Siia ei pääse keegi ilma loata — ametlikult." },
+    { "id": "arhiiv",       "name": "Arhiiv",        "description": "Vanad dokumendid lõhnavad niiskuse järele. Siin on midagi peidetud aastate eest." },
+    { "id": "turvakabinet", "name": "Turvakabinet",  "description": "Monitorid näitavad tühje koridore. Salvestis aga lõpeb ootamatult kell 02:17." },
+    { "id": "taastusruum",  "name": "Taastusruum",   "description": "Kemikaalide lõhn, käsitööriistad ja pooleli töö. Keegi oli siin hiljuti." },
+    { "id": "aed",          "name": "Muuseumiaed",   "description": "Tagaaed on pime ja külm. Aiavärava lukk on kriimustatud." }
   ],
   "items": [
-    { "id": "võti",         "name": "Salajane võti",  "description": "Avab ruumi, kuhu kõigil ligipääs puudub." },
-    { "id": "kaamera",      "name": "Kustutatud salvestis","description": "Turvakaamerate salvestis on tühjaks kustutatud." },
-    { "id": "kindad",       "name": "Kunstkiust kindad","description": "Leiti põrandalt, sõrmejälgi ei jätnud." },
-    { "id": "kiri",         "name": "Anonüümne kiri",  "description": "Pabertükk salapärase tekstiga." },
-    { "id": "toorist",      "name": "Purustatud silt", "description": "Eksponaadi nimesilt on maas katki." },
-    { "id": "taskulamp",    "name": "Taskulamp",       "description": "Leiti hoidla nurgast, kuigi valgus seal peaks põlema." }
+    { "id": "võti",        "name": "Salajane võti",        "description": "Avab ruumi, kuhu kõigil ligipääs puudub." },
+    { "id": "kaamera",     "name": "Kustutatud salvestis", "description": "Turvakaamerate salvestis on tühjaks kustutatud." },
+    { "id": "kindad",      "name": "Kunstkiust kindad",    "description": "Leiti põrandalt — sõrmejälgi ei jäänud maha." },
+    { "id": "kiri",        "name": "Anonüümne kiri",       "description": "Pabertükk salapärase tekstiga, mis vihjab kellegi teadmisele." },
+    { "id": "toorist",     "name": "Purustatud silt",      "description": "Eksponaadi nimesilt on maas katki — kas kogemata?" },
+    { "id": "taskulamp",   "name": "Taskulamp",            "description": "Leiti hoidla nurgast, kuigi valgus seal peaks põlema." }
   ],
   "rules": {
     "solutionMode": "random",
