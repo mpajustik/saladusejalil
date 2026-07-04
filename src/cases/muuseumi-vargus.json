@@ -1,0 +1,38 @@
+{
+  "id": "muuseumi-vargus",
+  "title": "Muuseumi Varguse Juhtum",
+  "description": "Linna muuseumist on öö jooksul kadunud väärtuslik eksponaat. Mängijad peavad välja selgitama, kes oli vargusega seotud, kus see toimus ja milline ese paljastab tõe.",
+  "difficulty": "medium",
+  "minPlayers": 3,
+  "maxPlayers": 6,
+  "suspects": [
+    { "id": "valvur",     "name": "Valvur Toomas",   "description": "Öövalvur, kes peaks olema kõike jälginud." },
+    { "id": "kuraator",   "name": "Kuraator Eeva",   "description": "Vastutab eksponaatide eest ja teab nende asukohti." },
+    { "id": "restauraator","name": "Restauraator Rein","description": "Oli hiljuti tööl hiliste õhtutundideni." },
+    { "id": "külastaja",  "name": "Külaline Karl",   "description": "Viimane enne sulgemist lahkunud külastaja." },
+    { "id": "koristaja",  "name": "Koristaja Malle",  "description": "Puhastab muuseumi igal õhtul." },
+    { "id": "teadlane",   "name": "Teadlane Priit",  "description": "Külalisteadlane, kellel oli eriload." }
+  ],
+  "locations": [
+    { "id": "peasaal",      "name": "Peasaal",        "description": "Peamine näitusesaal koos peamiste eksponaatidega." },
+    { "id": "hoidla",       "name": "Hoidla",         "description": "Suletud ruum, kus hoitakse varukollektsiooni." },
+    { "id": "arhiiv",       "name": "Arhiiv",         "description": "Vanad dokumendid ja kataloogid." },
+    { "id": "turvakabinet", "name": "Turvakabinet",   "description": "Valvekaameraid jälgitakse siit." },
+    { "id": "taastusruum",  "name": "Taastusruum",    "description": "Eksponaatide puhastamise ja parandamise ruum." },
+    { "id": "aed",          "name": "Muuseumiaed",    "description": "Tagaaed, kus on skulptuurid." }
+  ],
+  "items": [
+    { "id": "võti",         "name": "Salajane võti",  "description": "Avab ruumi, kuhu kõigil ligipääs puudub." },
+    { "id": "kaamera",      "name": "Kustutatud salvestis","description": "Turvakaamerate salvestis on tühjaks kustutatud." },
+    { "id": "kindad",       "name": "Kunstkiust kindad","description": "Leiti põrandalt, sõrmejälgi ei jätnud." },
+    { "id": "kiri",         "name": "Anonüümne kiri",  "description": "Pabertükk salapärase tekstiga." },
+    { "id": "toorist",      "name": "Purustatud silt", "description": "Eksponaadi nimesilt on maas katki." },
+    { "id": "taskulamp",    "name": "Taskulamp",       "description": "Leiti hoidla nurgast, kuigi valgus seal peaks põlema." }
+  ],
+  "rules": {
+    "solutionMode": "random",
+    "allowAccusationAnytime": true,
+    "useMovement": false,
+    "noteMode": "simple"
+  }
+}
