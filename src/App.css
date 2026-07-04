@@ -2387,6 +2387,60 @@ main {
   .room-choice-desc { display: block; }
 }
 
+/* --- Intro modaal --- */
+
+.intro-modal {
+  background: #1e1e2e;
+  border: 1px solid #c9a227;
+  border-radius: 14px;
+  padding: 2rem 1.8rem;
+  max-width: 400px;
+  width: 92%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.intro-modal h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #c9a227;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.intro-text {
+  margin: 0;
+  font-size: 1rem;
+  color: #d0c8b8;
+  line-height: 1.65;
+  font-style: italic;
+}
+
+/* --- Kahtlusaluse motiiv --- */
+
+.suspect-motive {
+  margin: 0.3rem 0 0.6rem;
+  font-size: 0.82rem;
+  color: #a89060;
+  line-height: 1.5;
+  padding: 0.4rem 0.6rem;
+  background: rgba(201,162,39,0.07);
+  border-left: 2px solid #c9a227;
+  border-radius: 0 6px 6px 0;
+}
+
+/* --- Lõpuekraani lahenduse tekst --- */
+
+.finished-resolution {
+  margin: 0.2rem 0 1rem;
+  font-size: 0.95rem;
+  color: #c0b090;
+  font-style: italic;
+  line-height: 1.6;
+  max-width: 360px;
+  text-align: center;
+}
+
 /* --- QR kood --- */
 
 .room-code-actions {

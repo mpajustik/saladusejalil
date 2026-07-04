@@ -4,6 +4,10 @@ export interface CaseCard {
   description: string
 }
 
+export interface CaseSuspect extends CaseCard {
+  motive?: string
+}
+
 export interface CaseRules {
   solutionMode: 'random' | 'fixed'
   allowAccusationAnytime: boolean
@@ -15,10 +19,12 @@ export interface MysteryCase {
   id: string
   title: string
   description: string
+  intro?: string
+  resolution?: string
   difficulty: 'easy' | 'medium' | 'hard'
   minPlayers: number
   maxPlayers: number
-  suspects: CaseCard[]
+  suspects: CaseSuspect[]
   locations: CaseCard[]
   items: CaseCard[]
   rules: CaseRules

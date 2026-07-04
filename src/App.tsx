@@ -89,6 +89,10 @@ function HypothesisForm({ playerName, gameCase, activeRoom, suspectId, itemId, o
           {gameCase.suspects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
       </div>
+      {(() => {
+        const motive = gameCase.suspects.find(s => s.id === suspectId)?.motive
+        return motive ? <p className="suspect-motive">💭 {motive}</p> : null
+      })()}
       <div className="form-row">
         <label>Ruum <span className="label-hint">(valitud korra alguses)</span></label>
         <div className="locked-room">{roomName}</div>
@@ -164,6 +168,10 @@ function AccusationForm({ playerName, gameCase, open, suspectId, locationId, ite
           {gameCase.suspects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
       </div>
+      {(() => {
+        const motive = gameCase.suspects.find(s => s.id === suspectId)?.motive
+        return motive ? <p className="suspect-motive">💭 {motive}</p> : null
+      })()}
       <div className="form-row">
         <label>Asukoht</label>
         <select value={locationId} onChange={e => onLocationChange(e.target.value)}>
@@ -184,18 +192,27 @@ function AccusationForm({ playerName, gameCase, open, suspectId, locationId, ite
   )
 }
 
-function FinishedScreen({ winner, solution, onRestart }: {
+function FinishedScreen({ winner, solution, resolution, onRestart }: {
   winner: string | null
   solution: { suspect: Card; location: Card; item: Card }
+  resolution?: string
   onRestart: () => void
 }) {
   const won = winner !== null
+  const resolvedText = resolution
+    ?.replace('{suspect}', solution.suspect.name)
+    .replace('{location}', solution.location.name)
+    .replace('{item}', solution.item.name)
+
   return (
     <div className="finished-screen">
       <div className="finished-icon">{won ? '🏆' : '🔍'}</div>
       <h2 className={won ? 'finished-win' : 'finished-lose'}>
         {won ? `${winner} võitis!` : 'Mäng on läbi'}
       </h2>
+      {resolvedText && (
+        <p className="finished-resolution">{resolvedText}</p>
+      )}
       <div className="finished-solution">
         <p className="finished-solution-title">Salajane lahendus oli:</p>
         <div className="solution-row">
@@ -212,6 +229,18 @@ function FinishedScreen({ winner, solution, onRestart }: {
         </div>
       </div>
       <button className="btn-primary" onClick={onRestart}>Mängi uuesti</button>
+    </div>
+  )
+}
+
+function IntroModal({ intro, onClose }: { intro: string; onClose: () => void }) {
+  return (
+    <div className="leave-modal-overlay">
+      <div className="intro-modal">
+        <h3>Juhtum algas</h3>
+        <p className="intro-text">{intro}</p>
+        <button className="btn-primary" onClick={onClose}>Alustame uurimist →</button>
+      </div>
     </div>
   )
 }
@@ -297,6 +326,7 @@ function App() {
   const [allCases] = useState<MysteryCase[]>(() => getAllCases())
   const [selectedCase, setSelectedCase] = useState<MysteryCase>(() => getAllCases()[0])
   const [showRules, setShowRules] = useState(false)
+  const [showIntro, setShowIntro] = useState(false)
   const [confirmLeave, setConfirmLeave] = useState(false)
   const [playerCount, setPlayerCount] = useState(() => getAllCases()[0].minPlayers)
   const [playerNames, setPlayerNames] = useState<string[]>(() => makePlayerNames(getAllCases()[0].minPlayers))
@@ -334,6 +364,7 @@ function App() {
     const notes = createNotes(players, selectedCase)
     setGame({ ...EMPTY_STATE, status: 'playing', phase: 'choosing-room', solution, players, notes })
     setTab('game')
+    if (selectedCase.intro) setShowIntro(true)
     setHSuspectId(selectedCase.suspects[0].id)
     setHItemId(selectedCase.items[0].id)
     setAOpen(false)
@@ -735,6 +766,7 @@ function App() {
       <main>
         <h1>Saladuse Jälil</h1>
         {showRules && <HowToPlay onClose={() => setShowRules(false)} />}
+        {showIntro && selectedCase.intro && <IntroModal intro={selectedCase.intro} onClose={() => setShowIntro(false)} />}
         <LeaveConfirmModal />
         <div className="turn-bar">
           <div className="turn-bar-top">
@@ -829,6 +861,7 @@ function App() {
         <FinishedScreen
           winner={game.winner}
           solution={game.solution!}
+          resolution={selectedCase.resolution}
           onRestart={startGame}
         />
       </main>
