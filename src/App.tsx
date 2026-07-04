@@ -693,6 +693,20 @@ function App() {
                 </div>
               </>
             )}
+            {game.history.length > 0 && (
+              <section className="history-section">
+                <h2>Tegevuste ajalugu ({game.history.length})</h2>
+                <ol>
+                  {game.history.map((h, i) => (
+                    <li key={i} className="history-item">
+                      <span className="history-player">{h.playerName}</span> arvas:{' '}
+                      <span className="history-cards">{h.suspect} · {h.location} · {h.item}</span>
+                      <span className="history-result"> — {h.result}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
           </div>
         )}
       </main>
