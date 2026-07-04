@@ -16,12 +16,13 @@ import type { MysteryCase } from './types/case'
 import './App.css'
 
 function UpdateBanner() {
-  const { needRefresh: [needRefresh], updateServiceWorker } = useRegisterSW()
+  const { needRefresh: [needRefresh, setNeedRefresh], updateServiceWorker } = useRegisterSW()
   if (!needRefresh) return null
   return (
     <div className="update-banner">
       <span>Uus versioon saadaval</span>
-      <button onClick={() => updateServiceWorker(true)}>Uuenda</button>
+      <button className="update-banner-btn" onClick={() => updateServiceWorker(true)}>Uuenda</button>
+      <button className="update-banner-close" onClick={() => setNeedRefresh(false)} aria-label="Sulge">×</button>
     </div>
   )
 }

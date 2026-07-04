@@ -2462,7 +2462,7 @@ main {
   white-space: nowrap;
 }
 
-.update-banner button {
+.update-banner-btn {
   background: #c9a227;
   border: none;
   border-radius: 6px;
@@ -2472,6 +2472,18 @@ main {
   padding: 0.3rem 0.7rem;
   cursor: pointer;
 }
+
+.update-banner-close {
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 0.2rem;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.update-banner-close:hover { color: #f0e6d0; }
 
 /* --- Kodu nupp ja lahkumise modaal --- */
 
