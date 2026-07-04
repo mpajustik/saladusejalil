@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRegisterSW } from 'virtual:pwa-register/react'
 import { getAllCases } from './utils/customCases'
 import { createSolution, dealCards, findRefuter, createNotes } from './logic/gameLogic'
 import { GridNotebook } from './components/GridNotebook'
@@ -13,6 +14,17 @@ import { getPublicState } from './api/gameApi'
 import type { Card, CellValue, GameState, HistoryEntry } from './types/game'
 import type { MysteryCase } from './types/case'
 import './App.css'
+
+function UpdateBanner() {
+  const { needRefresh: [needRefresh], updateServiceWorker } = useRegisterSW()
+  if (!needRefresh) return null
+  return (
+    <div className="update-banner">
+      <span>Uus versioon saadaval</span>
+      <button onClick={() => updateServiceWorker(true)}>Uuenda</button>
+    </div>
+  )
+}
 
 type AppMode = 'home' | 'single' | 'multi-create' | 'multi-join' | 'multi-lobby' | 'admin' | 'admin-create'
 
@@ -1133,4 +1145,13 @@ function App() {
   )
 }
 
-export default App
+function AppRoot() {
+  return (
+    <>
+      <UpdateBanner />
+      <App />
+    </>
+  )
+}
+
+export default AppRoot
