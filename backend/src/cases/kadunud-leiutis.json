@@ -5,7 +5,7 @@
   "intro": "Teadusmess pidi olema selle aasta tippsündmus — kuni keegi otsustas, et parim leiutis ei peaks võistlust võitma. Vaheajal kadus prototüüp jäljetult. Kaamerad salvestasid vaid segadust, tunnistajad on vastuolulised ja keegi koridoris ei mäleta midagi. Detektiivid, teie kord.",
   "resolution": "Juhtum on lahendatud. {suspect} tunnistas lõpuks üles — {location}s leiti {item}, mis kinnitas kõik kahtlused. Koolidirektor lubas, et järgmisel aastal on kaamerad igas nurgas.",
   "difficulty": "easy",
-  "minPlayers": 3,
+  "minPlayers": 2,
   "maxPlayers": 6,
   "suspects": [
     { "id": "mari",   "name": "Mari",   "description": "Noor teadlane, kes esitles messil oma keemiakatset.",          "motive": "Mari tuli teisele kohale — ja teab, et esimese koha projekt oli parem kui tema oma. Kadedustunne ei anna rahu." },

@@ -5,7 +5,7 @@
   "intro": "Esmaspäeva hommikul avati muuseumi uksed — ja kohe selgus, et midagi on valesti. Üks väärtuslikumatest eksponaatidest on kadunud. Öörahi sõnul ei pääsenud keegi sisse, kuid turvakaamerad salvestasid vaid staatilise müra. Keegi valetab. Teie ülesanne on leida, kes, kus ja millega.",
   "resolution": "Uurimine on lõppenud. {suspect} viidi küsitlusele — tõendid osutasid {location}le, kus leiti {item}. Muuseumi direktor ohkas kergendatult: saladus on paljastatud.",
   "difficulty": "medium",
-  "minPlayers": 3,
+  "minPlayers": 2,
   "maxPlayers": 6,
   "suspects": [
     { "id": "valvur",       "name": "Valvur Toomas",     "description": "Öövalvur, kes peaks olema kõike jälginud.",               "motive": "Toomas on töötanud muuseumis kümme aastat, kuid talle keelati palgatõus. Ta teab iga nurga ja iga kaamera pimenurga." },
