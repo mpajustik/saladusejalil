@@ -682,13 +682,29 @@ function App() {
         </div>
 
         {tab === 'notebook' && (
-          <GridNotebook
-            gameCase={selectedCase}
-            players={game.players.map(p => ({ id: p.id, name: p.name }))}
-            myPlayerId={activePlayer.id}
-            notes={game.notes[activePlayer.id] ?? {}}
-            onUpdate={(cardId, targetId, value) => updateNote(activePlayer.id, cardId, targetId, value)}
-          />
+          <>
+            <GridNotebook
+              gameCase={selectedCase}
+              players={game.players.map(p => ({ id: p.id, name: p.name }))}
+              myPlayerId={activePlayer.id}
+              notes={game.notes[activePlayer.id] ?? {}}
+              onUpdate={(cardId, targetId, value) => updateNote(activePlayer.id, cardId, targetId, value)}
+            />
+            {game.history.length > 0 && (
+              <section className="history-section" style={{ marginTop: '1rem' }}>
+                <h2>Tegevuste ajalugu ({game.history.length})</h2>
+                <ol>
+                  {game.history.map((h, i) => (
+                    <li key={i} className="history-item">
+                      <span className="history-player">{h.playerName}</span> arvas:{' '}
+                      <span className="history-cards">{h.suspect} · {h.location} · {h.item}</span>
+                      <span className="history-result"> — {h.result}</span>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+          </>
         )}
 
         {tab === 'game' && (
@@ -896,6 +912,20 @@ function App() {
             notes={game.notes[activePlayer.id] ?? {}}
             onUpdate={(cardId, targetId, value) => updateNote(activePlayer.id, cardId, targetId, value)}
           />
+          {game.history.length > 0 && (
+            <section className="history-section" style={{ marginTop: '1rem' }}>
+              <h2>Tegevuste ajalugu ({game.history.length})</h2>
+              <ol>
+                {game.history.map((h, i) => (
+                  <li key={i} className="history-item">
+                    <span className="history-player">{h.playerName}</span> arvas:{' '}
+                    <span className="history-cards">{h.suspect} · {h.location} · {h.item}</span>
+                    <span className="history-result"> — {h.result}</span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
         </>
       )}
 

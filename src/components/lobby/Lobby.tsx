@@ -680,6 +680,22 @@ export function Lobby({ session, onBack }: Props) {
             notes={notes}
             onUpdate={updateNote}
           />
+          {hypothesisLog.length > 0 && (
+            <section className="history-section" style={{ marginTop: '1rem' }}>
+              <h2>Tegevuste ajalugu ({hypothesisLog.length})</h2>
+              <ol>
+                {hypothesisLog.map((h, i) => (
+                  <li key={i} className="history-item">
+                    <span className="history-player">{h.playerName}</span> arvas:{' '}
+                    <span className="history-cards">{h.suspect} · {h.location} · {h.item}</span>
+                    <span className="history-result">
+                      {' — '}{h.canRefute ? `${h.refuterName} sai ümber lükata` : 'keegi ei saanud ümber lükata'}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          )}
         </>
       )}
     </div>
