@@ -22,7 +22,9 @@ interface LobbySession {
   roomCode: string
 }
 
-const PLAYER_NAMES = ['Mängija 1', 'Mängija 2', 'Mängija 3']
+function makePlayerNames(count: number): string[] {
+  return Array.from({ length: count }, (_, i) => `Mängija ${i + 1}`)
+}
 
 const RULES_SEEN_KEY = 'sj_seen_rules'
 
@@ -279,6 +281,7 @@ function App() {
   const [allCases] = useState<MysteryCase[]>(() => getAllCases())
   const [selectedCase, setSelectedCase] = useState<MysteryCase>(() => getAllCases()[0])
   const [showRules, setShowRules] = useState(false)
+  const [playerCount, setPlayerCount] = useState(() => getAllCases()[0].minPlayers)
   // Hüpoteesi valikud — püsivad tab-i vahetamisel
   const [hSuspectId, setHSuspectId] = useState(() => getAllCases()[0].suspects[0].id)
   const [hItemId, setHItemId]       = useState(() => getAllCases()[0].items[0].id)
@@ -308,7 +311,7 @@ function App() {
 
   function startGame() {
     const solution = createSolution(selectedCase)
-    const players = dealCards(selectedCase, solution, PLAYER_NAMES)
+    const players = dealCards(selectedCase, solution, makePlayerNames(playerCount))
     const notes = createNotes(players, selectedCase)
     setGame({ ...EMPTY_STATE, status: 'playing', phase: 'choosing-room', solution, players, notes })
     setTab('game')
@@ -614,7 +617,10 @@ function App() {
                 key={c.id}
                 type="button"
                 className={`case-card ${selectedCase.id === c.id ? 'case-card-selected' : ''}`}
-                onClick={() => setSelectedCase(c)}
+                onClick={() => {
+                  setSelectedCase(c)
+                  setPlayerCount(prev => Math.min(Math.max(prev, c.minPlayers), c.maxPlayers))
+                }}
               >
                 <span className="case-card-title">{c.title}</span>
                 <span className="case-card-meta">
@@ -623,9 +629,29 @@ function App() {
               </button>
             ))}
           </div>
+
+          <div className="player-count-select">
+            <p className="case-list-label">Mängijate arv</p>
+            <div className="player-count-buttons">
+              {Array.from(
+                { length: selectedCase.maxPlayers - selectedCase.minPlayers + 1 },
+                (_, i) => selectedCase.minPlayers + i
+              ).map(n => (
+                <button
+                  key={n}
+                  type="button"
+                  className={`player-count-btn ${playerCount === n ? 'player-count-active' : ''}`}
+                  onClick={() => setPlayerCount(n)}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div className="start-buttons">
             <button className="btn-primary" onClick={startGame}>
-              Alusta — {selectedCase.title}
+              Alusta — {playerCount} mängijat
             </button>
             <button className="btn-secondary" onClick={() => setShowRules(true)}>
               ? Kuidas mängida

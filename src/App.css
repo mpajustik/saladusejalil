@@ -1408,6 +1408,40 @@ h1 {
   line-height: 1.4;
 }
 
+.player-count-select {
+  margin-top: 1.2rem;
+}
+
+.player-count-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.player-count-btn {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  border: 2px solid #444;
+  background: transparent;
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.player-count-btn:hover {
+  border-color: #c9a227;
+}
+
+.player-count-active {
+  background: #c9a227;
+  border-color: #c9a227;
+  color: #1a1a2e;
+}
+
 .start-buttons {
   display: flex;
   gap: 0.7rem;
