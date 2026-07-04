@@ -42,6 +42,7 @@ interface HypothesisEvent {
   canRefute: boolean
   refuterName: string | null
   refuterId: string | null
+  revealed?: boolean
 }
 
 export function Lobby({ session, onBack }: Props) {
@@ -175,9 +176,15 @@ export function Lobby({ session, onBack }: Props) {
       }
     }
 
-    function onRevealDone() {
+    function onRevealDone(_data: { revealerName: string; askerName: string }) {
       setRefuterCards([])
       setPendingReveal(null)
+      setHypothesisLog(prev => {
+        const idx = [...prev].reverse().findIndex(h => h.canRefute && !h.revealed)
+        if (idx === -1) return prev
+        const realIdx = prev.length - 1 - idx
+        return prev.map((h, i) => i === realIdx ? { ...h, revealed: true } : h)
+      })
     }
 
     function onGameOver(data: { winner: string; solution: { suspect: string; location: string; item: string } }) {
@@ -545,7 +552,7 @@ export function Lobby({ session, onBack }: Props) {
                     <span className="history-player">{h.playerName}</span> arvas:{' '}
                     <span className="history-cards">{h.suspect} · {h.location} · {h.item}</span>
                     <span className="history-result">
-                      {' — '}{h.canRefute ? `${h.refuterName} saab ümber lükata` : 'keegi ei saanud ümber lükata'}
+                      {' — '}{h.revealed ? `${h.refuterName} näitas üht kaarti` : h.canRefute ? `${h.refuterName} saab ümber lükata` : 'keegi ei saanud ümber lükata'}
                     </span>
                   </li>
                 ))}
@@ -689,7 +696,7 @@ export function Lobby({ session, onBack }: Props) {
                     <span className="history-player">{h.playerName}</span> arvas:{' '}
                     <span className="history-cards">{h.suspect} · {h.location} · {h.item}</span>
                     <span className="history-result">
-                      {' — '}{h.canRefute ? `${h.refuterName} sai ümber lükata` : 'keegi ei saanud ümber lükata'}
+                      {' — '}{h.revealed ? `${h.refuterName} näitas üht kaarti` : h.canRefute ? `${h.refuterName} sai ümber lükata` : 'keegi ei saanud ümber lükata'}
                     </span>
                   </li>
                 ))}
