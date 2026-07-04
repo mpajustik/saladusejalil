@@ -647,6 +647,7 @@ function App() {
     return (
       <main>
         <h1>Saladuse Jälil</h1>
+        {showRules && <HowToPlay onClose={() => setShowRules(false)} />}
         <div className="start-screen">
           <button className="btn-back" onClick={() => setAppMode('home')}>← Tagasi</button>
           <div className="case-list">
