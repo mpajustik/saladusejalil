@@ -619,39 +619,58 @@ function App() {
       <main>
         <h1>Saladuse Jälil</h1>
         {showRules && <HowToPlay onClose={() => setShowRules(false)} />}
-        <div className="dev-banner">Arendaja vaade</div>
-        <div className="room-choice-screen">
-          <div className="room-choice-header">
-            <span className="room-choice-player">{activePlayer.name} kord</span>
-            {isEliminated && <span className="eliminated-badge">Välja langenud — saad ainult kaarte näidata</span>}
-          </div>
-          {isEliminated ? (
-            <div className="eliminated-notice">
-              <p>Tegid vale süüdistuse. Jätkad mängu, aga ei saa enam hüpoteese ega süüdistusi teha.</p>
-              <p className="eliminated-hint">Ootab järgmise mängija korda...</p>
-              <button className="btn-secondary" onClick={() => {
-                setGame(prev => ({
-                  ...prev,
-                  phase: 'choosing-room',
-                  activeRoom: null,
-                  activePlayerIndex: (prev.activePlayerIndex + 1) % prev.players.length,
-                }))
-              }}>Edasi →</button>
+        <div className="turn-bar">
+          <div className="turn-bar-top">
+            <span className="turn-label">Kord:</span>
+            <span className="turn-player">{activePlayer.name}</span>
+            <div className="tab-buttons">
+              <button className={`tab-btn ${tab === 'game' ? 'tab-active' : ''}`} onClick={() => setTab('game')}>Mäng</button>
+              <button className={`tab-btn ${tab === 'notebook' ? 'tab-active' : ''}`} onClick={() => setTab('notebook')}>Märkmik</button>
+              <button className="tab-btn" onClick={() => setShowRules(true)} title="Mängureeglid">?</button>
             </div>
-          ) : (
-            <>
-              <p className="room-choice-hint">Vali ruum mida külastad sel korral. Sinu hüpotees esitatakse sellest ruumist.</p>
-              <div className="room-choice-grid">
-                {selectedCase.locations.map(loc => (
-                  <button key={loc.id} className="room-choice-btn" onClick={() => chooseRoom(loc.id)}>
-                    <span className="room-choice-name">{loc.name}</span>
-                    <span className="room-choice-desc">{loc.description}</span>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          </div>
         </div>
+
+        {tab === 'notebook' && (
+          <GridNotebook
+            gameCase={selectedCase}
+            players={game.players.map(p => ({ id: p.id, name: p.name }))}
+            myPlayerId={activePlayer.id}
+            notes={game.notes[activePlayer.id] ?? {}}
+            onUpdate={(cardId, targetId, value) => updateNote(activePlayer.id, cardId, targetId, value)}
+          />
+        )}
+
+        {tab === 'game' && (
+          <div className="room-choice-screen">
+            {isEliminated ? (
+              <div className="eliminated-notice">
+                <p>Tegid vale süüdistuse. Jätkad mängu, aga ei saa enam hüpoteese ega süüdistusi teha.</p>
+                <p className="eliminated-hint">Ootab järgmise mängija korda...</p>
+                <button className="btn-secondary" onClick={() => {
+                  setGame(prev => ({
+                    ...prev,
+                    phase: 'choosing-room',
+                    activeRoom: null,
+                    activePlayerIndex: (prev.activePlayerIndex + 1) % prev.players.length,
+                  }))
+                }}>Edasi →</button>
+              </div>
+            ) : (
+              <>
+                <p className="room-choice-hint">Vali ruum mida külastad sel korral. Sinu hüpotees esitatakse sellest ruumist.</p>
+                <div className="room-choice-grid">
+                  {selectedCase.locations.map(loc => (
+                    <button key={loc.id} className="room-choice-btn" onClick={() => { setTab('game'); chooseRoom(loc.id) }}>
+                      <span className="room-choice-name">{loc.name}</span>
+                      <span className="room-choice-desc">{loc.description}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </main>
     )
   }
