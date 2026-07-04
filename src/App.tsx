@@ -283,6 +283,7 @@ function App() {
   const [showRules, setShowRules] = useState(false)
   const [confirmLeave, setConfirmLeave] = useState(false)
   const [playerCount, setPlayerCount] = useState(() => getAllCases()[0].minPlayers)
+  const [playerNames, setPlayerNames] = useState<string[]>(() => makePlayerNames(getAllCases()[0].minPlayers))
   // Hüpoteesi valikud — püsivad tab-i vahetamisel
   const [hSuspectId, setHSuspectId] = useState(() => getAllCases()[0].suspects[0].id)
   const [hItemId, setHItemId]       = useState(() => getAllCases()[0].items[0].id)
@@ -312,7 +313,8 @@ function App() {
 
   function startGame() {
     const solution = createSolution(selectedCase)
-    const players = dealCards(selectedCase, solution, makePlayerNames(playerCount))
+    const names = playerNames.slice(0, playerCount).map((n, i) => n.trim() || `Mängija ${i + 1}`)
+    const players = dealCards(selectedCase, solution, names)
     const notes = createNotes(players, selectedCase)
     setGame({ ...EMPTY_STATE, status: 'playing', phase: 'choosing-room', solution, players, notes })
     setTab('game')
@@ -662,12 +664,38 @@ function App() {
                   key={n}
                   type="button"
                   className={`player-count-btn ${playerCount === n ? 'player-count-active' : ''}`}
-                  onClick={() => setPlayerCount(n)}
+                  onClick={() => {
+                    setPlayerCount(n)
+                    setPlayerNames(prev => {
+                      const next = makePlayerNames(n)
+                      return next.map((def, i) => (prev[i] && prev[i].trim()) ? prev[i] : def)
+                    })
+                  }}
                 >
                   {n}
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="player-names-inputs">
+            {Array.from({ length: playerCount }, (_, i) => (
+              <div key={i} className="player-name-row">
+                <label className="player-name-label">Mängija {i + 1}</label>
+                <input
+                  className="player-name-input"
+                  type="text"
+                  maxLength={20}
+                  placeholder={`Mängija ${i + 1}`}
+                  value={playerNames[i] ?? ''}
+                  onChange={e => setPlayerNames(prev => {
+                    const next = [...prev]
+                    next[i] = e.target.value
+                    return next
+                  })}
+                />
+              </div>
+            ))}
           </div>
 
           <div className="start-buttons">
