@@ -51,6 +51,20 @@ export function dealCards(caseData: CaseData, solution: Solution, players: Backe
   })
 }
 
+export function nextNonEliminatedIndex(
+  players: BackendPlayer[],
+  currentIndex: number,
+  eliminatedIds: string[],
+): number {
+  const eliminated = new Set(eliminatedIds)
+  let next = (currentIndex + 1) % players.length
+  for (let i = 0; i < players.length; i++) {
+    if (!eliminated.has(players[next].id)) return next
+    next = (next + 1) % players.length
+  }
+  return next
+}
+
 export function findRefuter(
   players: BackendPlayer[],
   activeIndex: number,

@@ -3,7 +3,7 @@ import { saveGame, getGameById, getGameByRoomCode } from '../store.js'
 import { generateRoomCode, generateId } from '../utils.js'
 import { io, getSocketIdForPlayer } from '../socket.js'
 import { getCaseById, caseRegistry } from '../data/caseRegistry.js'
-import { createSolution, dealCards, findRefuter } from '../logic/gameLogic.js'
+import { createSolution, dealCards, findRefuter, nextNonEliminatedIndex } from '../logic/gameLogic.js'
 import type { BackendGame, PrivatePlayerState, PublicGameState } from '../types.js'
 import type { MysteryCase } from '../types/case.js'
 
@@ -270,7 +270,7 @@ gamesRouter.post('/:gameId/suggestions', (req, res) => {
 
   // Kui keegi ei saa ümber lükata, liigub kord automaatselt edasi
   if (!refuterPlayer) {
-    game.currentPlayerIndex = (game.currentPlayerIndex + 1) % game.players.length
+    game.currentPlayerIndex = nextNonEliminatedIndex(game.players, game.currentPlayerIndex, game.eliminatedPlayers)
     game.pendingSuggestion = null
     saveGame(game)
     const next = game.players[game.currentPlayerIndex]
@@ -339,7 +339,7 @@ gamesRouter.post('/:gameId/reveal', (req, res) => {
   // Teavita kõiki et kaart näidati (ilma kaardi infota)
   game.lastAction = `${refuter.name} näitas kaarti ${asker.name}le.`
   game.pendingSuggestion = null
-  game.currentPlayerIndex = (game.currentPlayerIndex + 1) % game.players.length
+  game.currentPlayerIndex = nextNonEliminatedIndex(game.players, game.currentPlayerIndex, game.eliminatedPlayers)
   const next = game.players[game.currentPlayerIndex]
   saveGame(game)
 

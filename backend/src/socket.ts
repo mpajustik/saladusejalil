@@ -1,6 +1,7 @@
 import { Server } from 'socket.io'
 import type { Server as HttpServer } from 'http'
 import { getGameById, saveGame } from './store.js'
+import { nextNonEliminatedIndex } from './logic/gameLogic.js'
 
 export let io: Server
 
@@ -63,7 +64,7 @@ export function initSocket(httpServer: HttpServer): void {
       const current = game.players[game.currentPlayerIndex]
       if (current.id !== playerId) return
 
-      game.currentPlayerIndex = (game.currentPlayerIndex + 1) % game.players.length
+      game.currentPlayerIndex = nextNonEliminatedIndex(game.players, game.currentPlayerIndex, game.eliminatedPlayers)
       const next = game.players[game.currentPlayerIndex]
       game.lastAction = `${current.name} lõpetas korra.`
       saveGame(game)
