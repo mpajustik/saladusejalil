@@ -281,6 +281,7 @@ function App() {
   const [allCases] = useState<MysteryCase[]>(() => getAllCases())
   const [selectedCase, setSelectedCase] = useState<MysteryCase>(() => getAllCases()[0])
   const [showRules, setShowRules] = useState(false)
+  const [confirmLeave, setConfirmLeave] = useState(false)
   const [playerCount, setPlayerCount] = useState(() => getAllCases()[0].minPlayers)
   // Hüpoteesi valikud — püsivad tab-i vahetamisel
   const [hSuspectId, setHSuspectId] = useState(() => getAllCases()[0].suspects[0].id)
@@ -476,6 +477,26 @@ function App() {
 
   const activePlayer = game.players[game.activePlayerIndex]
 
+  function LeaveConfirmModal() {
+    if (!confirmLeave) return null
+    return (
+      <div className="leave-modal-overlay">
+        <div className="leave-modal">
+          <h3>Lahku mängust?</h3>
+          <p>Mängu olek läheb kaotsi.</p>
+          <div className="leave-modal-actions">
+            <button className="btn-primary" onClick={() => { setConfirmLeave(false); setGame(EMPTY_STATE); setAppMode('home') }}>
+              Jah, lahku
+            </button>
+            <button className="btn-secondary" onClick={() => setConfirmLeave(false)}>
+              Jätka mängu
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // --- Render ---
 
   if (appMode === 'home') {
@@ -669,14 +690,15 @@ function App() {
       <main>
         <h1>Saladuse Jälil</h1>
         {showRules && <HowToPlay onClose={() => setShowRules(false)} />}
+        <LeaveConfirmModal />
         <div className="turn-bar">
           <div className="turn-bar-top">
-            <span className="turn-label">Kord:</span>
-            <span className="turn-player">{activePlayer.name}</span>
+            <button className="btn-leave" onClick={() => setConfirmLeave(true)}>← Kodu</button>
+            <span className="turn-player">{activePlayer.name} kord</span>
             <div className="tab-buttons">
               <button className={`tab-btn ${tab === 'game' ? 'tab-active' : ''}`} onClick={() => setTab('game')}>Mäng</button>
               <button className={`tab-btn ${tab === 'notebook' ? 'tab-active' : ''}`} onClick={() => setTab('notebook')}>Märkmik</button>
-              <button className="tab-btn" onClick={() => setShowRules(true)} title="Mängureeglid">?</button>
+              <button className="tab-btn" onClick={() => setShowRules(true)}>?</button>
             </div>
           </div>
         </div>
@@ -786,9 +808,10 @@ function App() {
     return (
       <main>
         <h1>Saladuse Jälil</h1>
+        <LeaveConfirmModal />
         <div className="turn-bar">
           <div className="turn-bar-top">
-            <span className="turn-label">Valib:</span>
+            <button className="btn-leave" onClick={() => setConfirmLeave(true)}>← Kodu</button>
             <span className="turn-player">{refuter.name}</span>
             <div className="tab-buttons">
               <button className={`tab-btn ${tab === 'game' ? 'tab-active' : ''}`} onClick={() => setTab('game')}>Kaardid</button>
@@ -853,9 +876,10 @@ function App() {
     return (
       <main>
         <h1>Saladuse Jälil</h1>
+        <LeaveConfirmModal />
         <div className="turn-bar">
           <div className="turn-bar-top">
-            <span className="turn-label">Kord:</span>
+            <button className="btn-leave" onClick={() => setConfirmLeave(true)}>← Kodu</button>
             <span className="turn-player">{activePlayer.name}</span>
             <div className="tab-buttons">
               <button className={`tab-btn ${tab === 'game' ? 'tab-active' : ''}`} onClick={() => setTab('game')}>Mäng</button>
@@ -915,9 +939,10 @@ function App() {
       <h1>Saladuse Jälil</h1>
       {showRules && <HowToPlay onClose={() => setShowRules(false)} />}
 
+      <LeaveConfirmModal />
       <div className="turn-bar">
         <div className="turn-bar-top">
-          <span className="turn-label">Kord:</span>
+          <button className="btn-leave" onClick={() => setConfirmLeave(true)}>← Kodu</button>
           <span className="turn-player">
             {activePlayer.name}
             {activeIsEliminated && <span className="eliminated-badge-small"> (väljas)</span>}
@@ -929,7 +954,7 @@ function App() {
             <button className={`tab-btn ${tab === 'notebook' ? 'tab-active' : ''}`} onClick={() => setTab('notebook')}>
               Märkmik
             </button>
-            <button className="tab-btn" onClick={() => setShowRules(true)} title="Mängureeglid">?</button>
+            <button className="tab-btn" onClick={() => setShowRules(true)}>?</button>
           </div>
         </div>
         {!activeIsEliminated && (
