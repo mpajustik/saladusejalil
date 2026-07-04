@@ -42,7 +42,7 @@ export type Notes = Record<string, Record<string, NoteStatus>>
 
 export interface GameState {
   status: 'idle' | 'playing' | 'finished'
-  phase: 'choosing-room' | 'waiting' | 'revealing' | 'card-shown'
+  phase: 'choosing-room' | 'waiting' | 'handoff-to-refuter' | 'revealing' | 'handoff-to-asker' | 'card-shown'
   winner: string | null
   solution: Solution | null
   players: Player[]

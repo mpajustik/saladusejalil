@@ -201,6 +201,21 @@ function FinishedScreen({ winner, solution, onRestart }: {
   )
 }
 
+function HandoffToRefuterScreen({ refuterName, askerName, onConfirm }: {
+  refuterName: string
+  askerName: string
+  onConfirm: () => void
+}) {
+  return (
+    <div className="handoff-screen">
+      <div className="handoff-icon">📱</div>
+      <h2>Anna seade <strong>{refuterName}</strong>le</h2>
+      <p className="handoff-sub">{askerName} ei tohi ekraani näha.</p>
+      <button className="btn-primary" onClick={onConfirm}>Olen {refuterName}, näen ekraani ✓</button>
+    </div>
+  )
+}
+
 function RevealScreen({ refuterName, askerName, options, onReveal }: {
   refuterName: string
   askerName: string
@@ -209,17 +224,29 @@ function RevealScreen({ refuterName, askerName, options, onReveal }: {
 }) {
   return (
     <div className="handoff-screen">
-      <div className="handoff-icon">📱</div>
-      <h2>Anna seade <strong>{refuterName}</strong>le</h2>
-      <p className="handoff-sub">{askerName} ei tohi ekraani näha.</p>
+      <h2>Vali kaart, mida näidata <strong>{askerName}</strong>le</h2>
+      <p className="handoff-sub">Teised mängijad ei tohi ekraani näha, {refuterName}.</p>
       <div className="reveal-options">
-        <p className="reveal-prompt">Vali üks kaart, mida näidata:</p>
         {options.map(card => (
           <button key={card.id} className="btn-card-reveal" onClick={() => onReveal(card)}>
             {card.name}
           </button>
         ))}
       </div>
+    </div>
+  )
+}
+
+function HandoffToAskerScreen({ askerName, onConfirm }: {
+  askerName: string
+  onConfirm: () => void
+}) {
+  return (
+    <div className="handoff-screen">
+      <div className="handoff-icon">📱</div>
+      <h2>Anna seade tagasi <strong>{askerName}</strong>le</h2>
+      <p className="handoff-sub">Teised mängijad ei tohi ekraani näha.</p>
+      <button className="btn-primary" onClick={onConfirm}>Olen {askerName}, näen ekraani ✓</button>
     </div>
   )
 }
@@ -231,11 +258,8 @@ function CardShownScreen({ askerName, shownCard, onConfirm }: {
 }) {
   return (
     <div className="handoff-screen">
-      <div className="handoff-icon">📱</div>
-      <h2>Anna seade tagasi <strong>{askerName}</strong>le</h2>
-      <p className="handoff-sub">Teised mängijad ei tohi ekraani näha.</p>
+      <h2>Sulle näidati kaarti, <strong>{askerName}</strong></h2>
       <div className="shown-card-box">
-        <p className="shown-card-label">Sulle näidati:</p>
         <p className="shown-card-name">{shownCard.name}</p>
         <p className="shown-card-hint">✓ Automaatselt märgitud märkmikusse</p>
       </div>
@@ -339,7 +363,7 @@ function App() {
 
     setGame(prev => ({
       ...prev,
-      phase: 'revealing',
+      phase: 'handoff-to-refuter',
       pending: { ...ids, suspectName, locationName, itemName },
       refuterIndex: refuter.playerIndex,
       refuterOptions: refuter.matchingCards,
@@ -347,7 +371,7 @@ function App() {
   }
 
   function revealCard(card: Card) {
-    setGame(prev => ({ ...prev, phase: 'card-shown', shownCard: card }))
+    setGame(prev => ({ ...prev, phase: 'handoff-to-asker', shownCard: card }))
   }
 
   function confirmShownCard() {
@@ -688,6 +712,19 @@ function App() {
     )
   }
 
+  if (game.phase === 'handoff-to-refuter' && game.refuterIndex !== null) {
+    return (
+      <main>
+        <h1>Saladuse Jälil</h1>
+        <HandoffToRefuterScreen
+          refuterName={game.players[game.refuterIndex].name}
+          askerName={activePlayer.name}
+          onConfirm={() => setGame(prev => ({ ...prev, phase: 'revealing' }))}
+        />
+      </main>
+    )
+  }
+
   if (game.phase === 'revealing' && game.refuterIndex !== null) {
     return (
       <main>
@@ -697,6 +734,18 @@ function App() {
           askerName={activePlayer.name}
           options={game.refuterOptions}
           onReveal={revealCard}
+        />
+      </main>
+    )
+  }
+
+  if (game.phase === 'handoff-to-asker' && game.shownCard) {
+    return (
+      <main>
+        <h1>Saladuse Jälil</h1>
+        <HandoffToAskerScreen
+          askerName={activePlayer.name}
+          onConfirm={() => setGame(prev => ({ ...prev, phase: 'card-shown' }))}
         />
       </main>
     )
