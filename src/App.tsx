@@ -730,23 +730,6 @@ function App() {
               />
             )}
             <AccusationForm playerName={activePlayer.name} gameCase={selectedCase} onSubmit={submitAccusation} />
-
-            <div className="solution-box">
-              <h3>Salajane lahendus (ainult arendaja vaates)</h3>
-              <div className="solution-row">
-                <span className="solution-label">Tegelane:</span>
-                <span className="solution-value">{game.solution!.suspect.name}</span>
-              </div>
-              <div className="solution-row">
-                <span className="solution-label">Asukoht:</span>
-                <span className="solution-value">{game.solution!.location.name}</span>
-              </div>
-              <div className="solution-row">
-                <span className="solution-label">Ese:</span>
-                <span className="solution-value">{game.solution!.item.name}</span>
-              </div>
-              <button className="btn-secondary" onClick={startGame}>Uus mäng</button>
-            </div>
           </div>
 
           <div className="playing-right">
@@ -766,25 +749,15 @@ function App() {
               </ol>
             </section>
 
-            <div className="players-grid">
-              {game.players.map((player, index) => (
-                <section
-                  key={player.id}
-                  className={`player-section ${index === game.activePlayerIndex ? 'player-active' : ''}`}
-                >
-                  <h2>
-                    {index === game.activePlayerIndex && <span className="active-badge">▶ </span>}
-                    {player.name}
-                    <span className="card-count"> ({player.hand.length} kaarti)</span>
-                  </h2>
-                  <ul>
-                    {player.hand.map(card => (
-                      <li key={card.id}>{card.name}</li>
-                    ))}
-                  </ul>
-                </section>
-              ))}
-            </div>
+            <section className="player-section player-active">
+              <h2>Sinu kaardid <span className="card-count">({activePlayer.hand.length})</span></h2>
+              <p className="hand-hint">Need kaardid <strong>ei ole</strong> lahendus.</p>
+              <ul>
+                {activePlayer.hand.map(card => (
+                  <li key={card.id}>{card.name}</li>
+                ))}
+              </ul>
+            </section>
           </div>
         </div>
       )}
