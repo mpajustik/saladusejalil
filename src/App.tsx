@@ -45,15 +45,16 @@ const EMPTY_STATE: GameState = {
 
 // --- Sub-components ---
 
-function HypothesisForm({ playerName, gameCase, activeRoom, onSubmit }: {
+function HypothesisForm({ playerName, gameCase, activeRoom, suspectId, itemId, onSuspectChange, onItemChange, onSubmit }: {
   playerName: string
   gameCase: MysteryCase
-  activeRoom: string        // lukustatud — mängija valis selle korra alguses
+  activeRoom: string
+  suspectId: string
+  itemId: string
+  onSuspectChange: (id: string) => void
+  onItemChange: (id: string) => void
   onSubmit: (ids: { suspectId: string; locationId: string; itemId: string }) => void
 }) {
-  const [suspectId, setSuspectId] = useState(gameCase.suspects[0].id)
-  const [itemId, setItemId]       = useState(gameCase.items[0].id)
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     onSubmit({ suspectId, locationId: activeRoom, itemId })
@@ -69,7 +70,7 @@ function HypothesisForm({ playerName, gameCase, activeRoom, onSubmit }: {
       </p>
       <div className="form-row">
         <label>Kahtlusalune</label>
-        <select value={suspectId} onChange={e => setSuspectId(e.target.value)}>
+        <select value={suspectId} onChange={e => onSuspectChange(e.target.value)}>
           {gameCase.suspects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
       </div>
@@ -79,7 +80,7 @@ function HypothesisForm({ playerName, gameCase, activeRoom, onSubmit }: {
       </div>
       <div className="form-row">
         <label>Ese / tõend</label>
-        <select value={itemId} onChange={e => setItemId(e.target.value)}>
+        <select value={itemId} onChange={e => onItemChange(e.target.value)}>
           {gameCase.items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
         </select>
       </div>
@@ -88,21 +89,25 @@ function HypothesisForm({ playerName, gameCase, activeRoom, onSubmit }: {
   )
 }
 
-function AccusationForm({ playerName, gameCase, onSubmit }: {
+function AccusationForm({ playerName, gameCase, open, suspectId, locationId, itemId, onOpenChange, onSuspectChange, onLocationChange, onItemChange, onSubmit }: {
   playerName: string
   gameCase: MysteryCase
+  open: boolean
+  suspectId: string
+  locationId: string
+  itemId: string
+  onOpenChange: (open: boolean) => void
+  onSuspectChange: (id: string) => void
+  onLocationChange: (id: string) => void
+  onItemChange: (id: string) => void
   onSubmit: (ids: { suspectId: string; locationId: string; itemId: string }) => void
 }) {
-  const [open, setOpen]         = useState(false)
   const [confirming, setConfirming] = useState(false)
-  const [suspectId, setSuspectId]   = useState(gameCase.suspects[0].id)
-  const [locationId, setLocationId] = useState(gameCase.locations[0].id)
-  const [itemId, setItemId]         = useState(gameCase.items[0].id)
 
   if (!open) {
     return (
       <div className="accusation-hint-wrap">
-        <button className="btn-accusation" onClick={() => setOpen(true)}>
+        <button className="btn-accusation" onClick={() => onOpenChange(true)}>
           Tee lõplik süüdistus
         </button>
         <p className="accusation-when-hint">
@@ -140,25 +145,25 @@ function AccusationForm({ playerName, gameCase, onSubmit }: {
       <h3>Lõplik süüdistus — {playerName}</h3>
       <div className="form-row">
         <label>Tegelane</label>
-        <select value={suspectId} onChange={e => setSuspectId(e.target.value)}>
+        <select value={suspectId} onChange={e => onSuspectChange(e.target.value)}>
           {gameCase.suspects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
       </div>
       <div className="form-row">
         <label>Asukoht</label>
-        <select value={locationId} onChange={e => setLocationId(e.target.value)}>
+        <select value={locationId} onChange={e => onLocationChange(e.target.value)}>
           {gameCase.locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
         </select>
       </div>
       <div className="form-row">
         <label>Ese</label>
-        <select value={itemId} onChange={e => setItemId(e.target.value)}>
+        <select value={itemId} onChange={e => onItemChange(e.target.value)}>
           {gameCase.items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
         </select>
       </div>
       <div className="accusation-actions">
         <button type="submit" className="btn-primary">Edasi →</button>
-        <button type="button" className="btn-secondary" onClick={() => setOpen(false)}>Tühista</button>
+        <button type="button" className="btn-secondary" onClick={() => onOpenChange(false)}>Tühista</button>
       </div>
     </form>
   )
@@ -250,6 +255,14 @@ function App() {
   const [allCases] = useState<MysteryCase[]>(() => getAllCases())
   const [selectedCase, setSelectedCase] = useState<MysteryCase>(() => getAllCases()[0])
   const [showRules, setShowRules] = useState(false)
+  // Hüpoteesi valikud — püsivad tab-i vahetamisel
+  const [hSuspectId, setHSuspectId] = useState(() => getAllCases()[0].suspects[0].id)
+  const [hItemId, setHItemId]       = useState(() => getAllCases()[0].items[0].id)
+  // Süüdistuse valikud — püsivad tab-i vahetamisel
+  const [aOpen, setAOpen]           = useState(false)
+  const [aSuspectId, setASuspectId] = useState(() => getAllCases()[0].suspects[0].id)
+  const [aLocationId, setALocationId] = useState(() => getAllCases()[0].locations[0].id)
+  const [aItemId, setAItemId]       = useState(() => getAllCases()[0].items[0].id)
 
   // Kontrolli käivitumisel, kas eelmine sessioon on kehtiv
   useEffect(() => {
@@ -275,6 +288,12 @@ function App() {
     const notes = createNotes(players, selectedCase)
     setGame({ ...EMPTY_STATE, status: 'playing', phase: 'choosing-room', solution, players, notes })
     setTab('game')
+    setHSuspectId(selectedCase.suspects[0].id)
+    setHItemId(selectedCase.items[0].id)
+    setAOpen(false)
+    setASuspectId(selectedCase.suspects[0].id)
+    setALocationId(selectedCase.locations[0].id)
+    setAItemId(selectedCase.items[0].id)
     // Näita reegleid kui pole veel näidatud
     if (!localStorage.getItem(RULES_SEEN_KEY)) {
       setShowRules(true)
@@ -307,6 +326,7 @@ function App() {
         item: itemName,
         result: 'Keegi ei saanud ümber lükata.',
       }
+      setAOpen(false)
       setGame(prev => ({
         ...prev,
         history: [...prev.history, entry],
@@ -345,6 +365,7 @@ function App() {
     if (shownCardId) {
       applyKnownFact(active.id, shownCardId, refuter.id)
     }
+    setAOpen(false)
     setGame(prev => ({
       ...prev,
       phase: 'choosing-room',
@@ -709,13 +730,65 @@ function App() {
       </div>
 
       {tab === 'notebook' && (
-        <GridNotebook
-          gameCase={selectedCase}
-          players={game.players.map(p => ({ id: p.id, name: p.name }))}
-          myPlayerId={activePlayer.id}
-          notes={game.notes[activePlayer.id] ?? {}}
-          onUpdate={(cardId, targetId, value) => updateNote(activePlayer.id, cardId, targetId, value)}
-        />
+        <>
+          {aOpen && (
+            <div className="notebook-selection-bar">
+              <span className="nsb-label">Süüdistuse valik:</span>
+              <div className="nsb-selects">
+                <div className="nsb-row">
+                  <span className="nsb-cat">Tegelane</span>
+                  <select value={aSuspectId} onChange={e => setASuspectId(e.target.value)} className="nsb-select">
+                    {selectedCase.suspects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
+                <div className="nsb-row">
+                  <span className="nsb-cat">Asukoht</span>
+                  <select value={aLocationId} onChange={e => setALocationId(e.target.value)} className="nsb-select">
+                    {selectedCase.locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+                  </select>
+                </div>
+                <div className="nsb-row">
+                  <span className="nsb-cat">Ese</span>
+                  <select value={aItemId} onChange={e => setAItemId(e.target.value)} className="nsb-select">
+                    {selectedCase.items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+                  </select>
+                </div>
+              </div>
+              <button className="btn-secondary nsb-switch" onClick={() => setTab('game')}>← Tagasi mängu</button>
+            </div>
+          )}
+          {!aOpen && game.activeRoom && (
+            <div className="notebook-selection-bar">
+              <span className="nsb-label">Praegune valik:</span>
+              <div className="nsb-selects">
+                <div className="nsb-row">
+                  <span className="nsb-cat">Tegelane</span>
+                  <select value={hSuspectId} onChange={e => setHSuspectId(e.target.value)} className="nsb-select">
+                    {selectedCase.suspects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
+                <div className="nsb-row">
+                  <span className="nsb-cat">Ruum</span>
+                  <span className="nsb-locked">{selectedCase.locations.find(l => l.id === game.activeRoom)?.name}</span>
+                </div>
+                <div className="nsb-row">
+                  <span className="nsb-cat">Ese</span>
+                  <select value={hItemId} onChange={e => setHItemId(e.target.value)} className="nsb-select">
+                    {selectedCase.items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+                  </select>
+                </div>
+              </div>
+              <button className="btn-secondary nsb-switch" onClick={() => setTab('game')}>← Tagasi mängu</button>
+            </div>
+          )}
+          <GridNotebook
+            gameCase={selectedCase}
+            players={game.players.map(p => ({ id: p.id, name: p.name }))}
+            myPlayerId={activePlayer.id}
+            notes={game.notes[activePlayer.id] ?? {}}
+            onUpdate={(cardId, targetId, value) => updateNote(activePlayer.id, cardId, targetId, value)}
+          />
+        </>
       )}
 
       {tab === 'game' && (
@@ -726,10 +799,26 @@ function App() {
                 playerName={activePlayer.name}
                 gameCase={selectedCase}
                 activeRoom={game.activeRoom}
+                suspectId={hSuspectId}
+                itemId={hItemId}
+                onSuspectChange={setHSuspectId}
+                onItemChange={setHItemId}
                 onSubmit={submitHypothesis}
               />
             )}
-            <AccusationForm playerName={activePlayer.name} gameCase={selectedCase} onSubmit={submitAccusation} />
+            <AccusationForm
+              playerName={activePlayer.name}
+              gameCase={selectedCase}
+              open={aOpen}
+              suspectId={aSuspectId}
+              locationId={aLocationId}
+              itemId={aItemId}
+              onOpenChange={setAOpen}
+              onSuspectChange={setASuspectId}
+              onLocationChange={setALocationId}
+              onItemChange={setAItemId}
+              onSubmit={submitAccusation}
+            />
           </div>
 
           <div className="playing-right">
