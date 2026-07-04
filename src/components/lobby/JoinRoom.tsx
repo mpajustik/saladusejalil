@@ -7,7 +7,10 @@ interface Props {
 }
 
 export function JoinRoom({ onBack, onJoined }: Props) {
-  const [code, setCode] = useState('')
+  const [code, setCode] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.get('join')?.toUpperCase() ?? ''
+  })
   const [name, setName] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -19,6 +22,7 @@ export function JoinRoom({ onBack, onJoined }: Props) {
     setError(null)
     try {
       const session = await joinGame(code.trim(), name.trim())
+      window.history.replaceState({}, '', window.location.pathname)
       onJoined(session)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Viga')
@@ -41,7 +45,7 @@ export function JoinRoom({ onBack, onJoined }: Props) {
             onChange={e => setCode(e.target.value.toUpperCase())}
             placeholder="nt. ABCD"
             maxLength={4}
-            autoFocus
+            autoFocus={!code}
             style={{ letterSpacing: '0.2em', textTransform: 'uppercase' }}
           />
         </div>
@@ -53,6 +57,7 @@ export function JoinRoom({ onBack, onJoined }: Props) {
             onChange={e => setName(e.target.value)}
             placeholder="Mängija nimi"
             maxLength={20}
+            autoFocus={!!code}
           />
         </div>
         {error && <p className="lobby-error">{error}</p>}

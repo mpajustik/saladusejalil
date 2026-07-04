@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { QRCodeSVG } from 'qrcode.react'
 import { getPublicState, getPrivateState, startGame, revealCard } from '../../api/gameApi'
 import { connectSocket, disconnectSocket, getSocket } from '../../api/socket'
 import { HypothesisForm } from './HypothesisForm'
@@ -67,6 +68,7 @@ export function Lobby({ session, onBack }: Props) {
   const [tab, setTab]                         = useState<LobbyTab>('game')
   const [activeRoom, setActiveRoom]           = useState<string | null>(null)
   const [gameOver, setGameOver]               = useState<{ winner: string; solution: { suspect: string; location: string; item: string } } | null>(null)
+  const [showQr, setShowQr]                   = useState(false)
   // Valikud hüpoteesi jaoks — ei lähtesta tab-i vahetamisel
   const [hSuspectId, setHSuspectId]           = useState('')
   const [hItemId, setHItemId]                 = useState('')
@@ -429,7 +431,29 @@ export function Lobby({ session, onBack }: Props) {
             <div className="room-code-box">
               <p className="room-code-label">Ruumikood</p>
               <p className="room-code">{session.roomCode}</p>
-              <p className="room-code-hint">Jaga seda koodi teistega.</p>
+              <div className="room-code-actions">
+                <p className="room-code-hint">Jaga seda koodi teistega.</p>
+                <button className="btn-qr" onClick={() => setShowQr(true)}>QR kood</button>
+              </div>
+            </div>
+          )}
+
+          {showQr && (
+            <div className="leave-modal-overlay" onClick={() => setShowQr(false)}>
+              <div className="qr-modal" onClick={e => e.stopPropagation()}>
+                <h3>Skaneeri liitumiseks</h3>
+                <div className="qr-code-wrap">
+                  <QRCodeSVG
+                    value={`${window.location.origin}${window.location.pathname}?join=${session.roomCode}`}
+                    size={200}
+                    bgColor="#1e1e2e"
+                    fgColor="#f0e6d0"
+                    level="M"
+                  />
+                </div>
+                <p className="qr-code-hint">Ruumikood: <strong>{session.roomCode}</strong></p>
+                <button className="btn-secondary" onClick={() => setShowQr(false)}>Sulge</button>
+              </div>
             </div>
           )}
 

@@ -285,7 +285,10 @@ function CardShownScreen({ askerName, shownCard, onConfirm }: {
 // --- Main App ---
 
 function App() {
-  const [appMode, setAppMode] = useState<AppMode>('home')
+  const [appMode, setAppMode] = useState<AppMode>(() => {
+    const params = new URLSearchParams(window.location.search)
+    return params.get('join') ? 'multi-join' : 'home'
+  })
   const [lobbySession, setLobbySession] = useState<LobbySession | null>(null)
   const [savedSession, setSavedSession] = useState<LobbySession | null>(null)
   const [game, setGame] = useState<GameState>(EMPTY_STATE)
