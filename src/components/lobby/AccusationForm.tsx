@@ -6,22 +6,26 @@ interface Props {
   gameId: string
   playerId: string
   gameCase: MysteryCase
+  open: boolean
+  suspectId: string
+  locationId: string
+  itemId: string
+  onOpenChange: (open: boolean) => void
+  onSuspectChange: (id: string) => void
+  onLocationChange: (id: string) => void
+  onItemChange: (id: string) => void
   onResult: (correct: boolean, winner?: string) => void
 }
 
-export function AccusationForm({ gameId, playerId, gameCase, onResult }: Props) {
-  const [open, setOpen]             = useState(false)
+export function AccusationForm({ gameId, playerId, gameCase, open, suspectId, locationId, itemId, onOpenChange, onSuspectChange, onLocationChange, onItemChange, onResult }: Props) {
   const [confirming, setConfirming] = useState(false)
-  const [suspectId, setSuspectId]   = useState(gameCase.suspects[0].id)
-  const [locationId, setLocationId] = useState(gameCase.locations[0].id)
-  const [itemId, setItemId]         = useState(gameCase.items[0].id)
   const [loading, setLoading]       = useState(false)
   const [error, setError]           = useState<string | null>(null)
 
   if (!open) {
     return (
       <div className="accusation-hint-wrap">
-        <button className="btn-accusation" onClick={() => setOpen(true)}>
+        <button className="btn-accusation" onClick={() => onOpenChange(true)}>
           Tee lõplik süüdistus
         </button>
         <p className="accusation-when-hint">
@@ -77,25 +81,25 @@ export function AccusationForm({ gameId, playerId, gameCase, onResult }: Props) 
       <p className="accusation-warning">Hoiatus: vale vastus tähendab mängust väljalangemist!</p>
       <div className="form-row">
         <label>Tegelane</label>
-        <select value={suspectId} onChange={e => setSuspectId(e.target.value)}>
+        <select value={suspectId} onChange={e => onSuspectChange(e.target.value)}>
           {gameCase.suspects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
         </select>
       </div>
       <div className="form-row">
         <label>Asukoht</label>
-        <select value={locationId} onChange={e => setLocationId(e.target.value)}>
+        <select value={locationId} onChange={e => onLocationChange(e.target.value)}>
           {gameCase.locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
         </select>
       </div>
       <div className="form-row">
         <label>Ese</label>
-        <select value={itemId} onChange={e => setItemId(e.target.value)}>
+        <select value={itemId} onChange={e => onItemChange(e.target.value)}>
           {gameCase.items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
         </select>
       </div>
       <div className="accusation-actions">
         <button type="submit" className="btn-primary">Edasi →</button>
-        <button type="button" className="btn-secondary" onClick={() => setOpen(false)}>Tühista</button>
+        <button type="button" className="btn-secondary" onClick={() => onOpenChange(false)}>Tühista</button>
       </div>
     </form>
   )

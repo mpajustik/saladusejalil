@@ -69,6 +69,11 @@ export function Lobby({ session, onBack }: Props) {
   // Valikud hüpoteesi jaoks — ei lähtesta tab-i vahetamisel
   const [hSuspectId, setHSuspectId]           = useState('')
   const [hItemId, setHItemId]                 = useState('')
+  // Valikud süüdistuse jaoks — ei lähtesta tab-i vahetamisel
+  const [aOpen, setAOpen]                     = useState(false)
+  const [aSuspectId, setASuspectId]           = useState('')
+  const [aLocationId, setALocationId]         = useState('')
+  const [aItemId, setAItemId]                 = useState('')
 
   // Socket ühendus ja sündmused
   useEffect(() => {
@@ -89,6 +94,9 @@ export function Lobby({ session, onBack }: Props) {
           setGameCase(foundCase)
           setHSuspectId(prev => prev || foundCase.suspects[0].id)
           setHItemId(prev => prev || foundCase.items[0].id)
+          setASuspectId(prev => prev || foundCase.suspects[0].id)
+          setALocationId(prev => prev || foundCase.locations[0].id)
+          setAItemId(prev => prev || foundCase.items[0].id)
           if (priv.hand.length > 0) applyOwnHandToNotes(priv.hand, foundCase, pub.players.map(p => p.id))
         }
         if (pub.status === 'in_progress' && pub.currentPlayerId) {
@@ -125,6 +133,9 @@ export function Lobby({ session, onBack }: Props) {
           setGameCase(foundCase)
           setHSuspectId(prev => prev || foundCase.suspects[0].id)
           setHItemId(prev => prev || foundCase.items[0].id)
+          setASuspectId(prev => prev || foundCase.suspects[0].id)
+          setALocationId(prev => prev || foundCase.locations[0].id)
+          setAItemId(prev => prev || foundCase.items[0].id)
           applyOwnHandToNotes(priv.hand, foundCase, pub.players.map(p => p.id))
         }
       }).catch(() => {})
@@ -138,6 +149,7 @@ export function Lobby({ session, onBack }: Props) {
       setRefuterCards([])
       // NB: setRevealedCard(null) EI käi siia — kaart peab olema näha kuni mängija ise kinnitab
       setActiveRoom(null)
+      setAOpen(false)
       setTab('game')
     }
 
@@ -213,6 +225,9 @@ export function Lobby({ session, onBack }: Props) {
         setGameCase(foundCase)
         setHSuspectId(prev => prev || foundCase.suspects[0].id)
         setHItemId(prev => prev || foundCase.items[0].id)
+        setASuspectId(prev => prev || foundCase.suspects[0].id)
+        setALocationId(prev => prev || foundCase.locations[0].id)
+        setAItemId(prev => prev || foundCase.items[0].id)
         if (priv.hand.length > 0) applyOwnHandToNotes(priv.hand, foundCase, pub.players.map(p => p.id))
       }
       if (pub.status === 'in_progress' && pub.currentPlayerId) {
@@ -495,10 +510,19 @@ export function Lobby({ session, onBack }: Props) {
                   gameId={session.gameId}
                   playerId={session.playerId}
                   gameCase={gameCase}
+                  open={aOpen}
+                  suspectId={aSuspectId}
+                  locationId={aLocationId}
+                  itemId={aItemId}
+                  onOpenChange={setAOpen}
+                  onSuspectChange={setASuspectId}
+                  onLocationChange={setALocationId}
+                  onItemChange={setAItemId}
                   onResult={(correct) => {
                     if (!correct) {
                       setHypothesisSubmitted(false)
                       setActiveRoom(null)
+                      setAOpen(false)
                     }
                   }}
                 />
@@ -582,7 +606,35 @@ export function Lobby({ session, onBack }: Props) {
       {gameInProgress && tab === 'notebook' && gameCase && gameState && (
         <>
           {/* Praegune valik — nähtav märkmiku kõrval */}
-          {isMyTurn && activeRoom && !hypothesisSubmitted && !pendingReveal && (
+          {isMyTurn && activeRoom && aOpen && (
+            <div className="notebook-selection-bar">
+              <span className="nsb-label">Süüdistuse valik:</span>
+              <div className="nsb-selects">
+                <div className="nsb-row">
+                  <span className="nsb-cat">Tegelane</span>
+                  <select value={aSuspectId} onChange={e => setASuspectId(e.target.value)} className="nsb-select">
+                    {gameCase.suspects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                  </select>
+                </div>
+                <div className="nsb-row">
+                  <span className="nsb-cat">Asukoht</span>
+                  <select value={aLocationId} onChange={e => setALocationId(e.target.value)} className="nsb-select">
+                    {gameCase.locations.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+                  </select>
+                </div>
+                <div className="nsb-row">
+                  <span className="nsb-cat">Ese</span>
+                  <select value={aItemId} onChange={e => setAItemId(e.target.value)} className="nsb-select">
+                    {gameCase.items.map(i => <option key={i.id} value={i.id}>{i.name}</option>)}
+                  </select>
+                </div>
+              </div>
+              <button className="btn-secondary nsb-switch" onClick={() => setTab('game')}>
+                ← Tagasi mängu
+              </button>
+            </div>
+          )}
+          {isMyTurn && activeRoom && !aOpen && !hypothesisSubmitted && !pendingReveal && (
             <div className="notebook-selection-bar">
               <span className="nsb-label">Praegune valik:</span>
               <div className="nsb-selects">
